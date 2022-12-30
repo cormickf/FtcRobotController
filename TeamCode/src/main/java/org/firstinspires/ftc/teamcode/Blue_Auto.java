@@ -36,6 +36,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.sql.Driver;
+
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -63,6 +65,9 @@ public class Blue_Auto extends LinearOpMode {
     private DcMotor motorFrontRight = null;
     private DcMotor motorBackRight = null;
     private DcMotor motorBackLeft = null;
+
+    private VisionPathway visionPathway;
+    private VisionPathway.ParkingPosition parkingPosition;
 
     private Servo claw;
 
@@ -207,15 +212,51 @@ public class Blue_Auto extends LinearOpMode {
         motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        visionPathway = new AprilTagVisionPathway(this);
+
 
 
         claw = hardwareMap.servo.get("Claw");
 
+        while(!isStarted()) {
+            visionPathway.UpdateDetections();
+            parkingPosition = visionPathway.GetDetectedParkingPosition();
+            telemetry.addData("Parking Position", visionPathway.GetDetectedParkingPosition().name());
+            telemetry.update();
+        }
+
         waitForStart();
         StrafeInchesLeft(2,.5);
+        Waitmilli(1000);
         claw.setPosition(.20);
+        Waitmilli(1000);
         DriveInches(-23,.50);
+        Waitmilli(1000);
         claw.setPosition(1);
+        Waitmilli(1000);
+        DriveInches(23,.50);
+        Waitmilli(1000);
+        if(parkingPosition == VisionPathway.ParkingPosition.ONE) {
+            claw.setPosition(1);
+            Waitmilli(1000);
+            DriveInches(2, .75);
+            Waitmilli(1000);
+            StrafeInchesLeft(25.5, .75);
+            Waitmilli(1000);
+            DriveInches(20, .75);
+            //done
+        }
+        else if(parkingPosition == VisionPathway.ParkingPosition.THREE) {
+            StrafeInchesLeft(32, .75);
+            DriveInches(-20,.75);
+            //done
+        }
+        else
+            StrafeInchesLeft(25,.75);
+        // done
+
+
+
 
 
 
