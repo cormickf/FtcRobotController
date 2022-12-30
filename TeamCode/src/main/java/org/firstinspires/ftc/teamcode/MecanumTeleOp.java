@@ -42,6 +42,7 @@ public class MecanumTeleOp extends LinearOpMode {
         DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
         DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
+        DcMotor motorLift = hardwareMap.dcMotor.get("motorLift");
         claw = hardwareMap.servo.get("Claw");
 
         motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -173,17 +174,24 @@ public class MecanumTeleOp extends LinearOpMode {
                     //closing the claw 12/29/22
                     claw.setPosition(.45);
                 break;
-            case FtcGamePad.GAMEPAD_X:
+
+
+            case FtcGamePad.GAMEPAD_DPAD_UP:
                 if(pressed)
-                    claw.setPosition(claw.getPosition() + .10);
-                break;
 
 
 
-            case FtcGamePad.GAMEPAD_B:
-                    if(pressed)
-                        claw.setPosition(claw.getPosition() - .10);
-                    break;
+//            case FtcGamePad.GAMEPAD_X:
+//                if(pressed)
+//                    claw.setPosition(claw.getPosition() + .10);
+//                break;
+
+
+
+//            case FtcGamePad.GAMEPAD_B:
+//                    if(pressed)
+//                        claw.setPosition(claw.getPosition() - .10);
+//                    break;
 
 
 

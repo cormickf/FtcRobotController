@@ -52,7 +52,7 @@ import java.sql.Driver;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name=" Blue Auto", group="Linear Opmode")
+@Autonomous(name=" Right Blue Auto", group="Linear Opmode")
 
 public class Blue_Auto extends LinearOpMode {
 
@@ -70,6 +70,8 @@ public class Blue_Auto extends LinearOpMode {
     private VisionPathway.ParkingPosition parkingPosition;
 
     private Servo claw;
+    private boolean runPark;
+
 
 
 
@@ -228,31 +230,28 @@ public class Blue_Auto extends LinearOpMode {
         waitForStart();
         StrafeInchesLeft(2,.5);
         Waitmilli(1000);
-        claw.setPosition(.20);
+        claw.setPosition(1);
         Waitmilli(1000);
         DriveInches(-23,.50);
         Waitmilli(1000);
-        claw.setPosition(1);
+        claw.setPosition(.45);
         Waitmilli(1000);
-        DriveInches(23,.50);
+        DriveInches(21.1, .50);
         Waitmilli(1000);
-        if(parkingPosition == VisionPathway.ParkingPosition.ONE) {
-            claw.setPosition(1);
-            Waitmilli(1000);
+
+        if (parkingPosition == VisionPathway.ParkingPosition.ONE) {
             DriveInches(2, .75);
             Waitmilli(1000);
             StrafeInchesLeft(25.5, .75);
             Waitmilli(1000);
             DriveInches(20, .75);
             //done
-        }
-        else if(parkingPosition == VisionPathway.ParkingPosition.THREE) {
+        } else if (parkingPosition == VisionPathway.ParkingPosition.THREE) {
             StrafeInchesLeft(32, .75);
-            DriveInches(-20,.75);
+            DriveInches(-20, .75);
             //done
-        }
-        else
-            StrafeInchesLeft(25,.75);
+        } else
+            StrafeInchesLeft(25, .75);
         // done
 
 
