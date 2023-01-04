@@ -177,7 +177,7 @@ public class MecanumTeleOp extends LinearOpMode {
 
 
             case FtcGamePad.GAMEPAD_DPAD_UP:
-                if(pressed)
+//                if(pressed)
 
 
 
