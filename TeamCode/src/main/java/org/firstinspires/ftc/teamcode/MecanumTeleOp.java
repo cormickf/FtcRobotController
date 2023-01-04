@@ -21,12 +21,13 @@ public class MecanumTeleOp extends LinearOpMode {
     public BNO055IMU imu;
     public boolean fastMode;
     private boolean slowMode;
-    private boolean servoLimit = false;
+
 
 
     private double offsetHeading = 0;
 
 
+    private DcMotor motorLift;
     private Servo claw;
 
 
@@ -42,7 +43,7 @@ public class MecanumTeleOp extends LinearOpMode {
         DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
         DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
-        DcMotor motorLift = hardwareMap.dcMotor.get("motorLift");
+        motorLift = hardwareMap.dcMotor.get("motorLift");
         claw = hardwareMap.servo.get("Claw");
 
         motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -56,6 +57,7 @@ public class MecanumTeleOp extends LinearOpMode {
         // Reverse left motors if you are using NeveRests
         motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorLift.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
 
@@ -106,8 +108,7 @@ public class MecanumTeleOp extends LinearOpMode {
 
             driverGamePad.update();
             operatorGamePad.update();
-            if(claw.getPosition() <= .45)
-                servoLimit = true;
+
 
 
             telemetry.update();
@@ -160,7 +161,6 @@ public class MecanumTeleOp extends LinearOpMode {
     }
 
     private void OnOperatorGamePadChange(FtcGamePad ftcGamePad, int button, boolean pressed) {
-        double n = 0;
 
         switch (button) {
 
@@ -177,7 +177,18 @@ public class MecanumTeleOp extends LinearOpMode {
 
 
             case FtcGamePad.GAMEPAD_DPAD_UP:
-//                if(pressed)
+               if(pressed)
+                   motorLift.setPower(0.70);
+               else
+                   motorLift.setPower(0);
+               break;
+            case FtcGamePad.GAMEPAD_DPAD_DOWN:
+                if(pressed)
+                    motorLift.setPower(-.70);
+                else
+                    motorLift.setPower(0);
+                break;
+
 
 
 
