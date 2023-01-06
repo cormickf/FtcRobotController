@@ -24,11 +24,15 @@ public class MecanumTeleOp extends LinearOpMode {
 
 
 
+
+
     private double offsetHeading = 0;
 
 
     private DcMotor motorLift;
     private Servo claw;
+
+
 
 
     @Override
@@ -44,12 +48,19 @@ public class MecanumTeleOp extends LinearOpMode {
         DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
         motorLift = hardwareMap.dcMotor.get("motorLift");
+
+        motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         claw = hardwareMap.servo.get("Claw");
 
         motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+
 
 
 
@@ -109,6 +120,15 @@ public class MecanumTeleOp extends LinearOpMode {
             driverGamePad.update();
             operatorGamePad.update();
 
+            int liftMotor = motorLift.getCurrentPosition();
+            String liftPosition = Integer.toString(liftMotor);
+            String clawPosition = Double.toString(claw.getPosition());
+
+            telemetry.addLine("Lift position:" + liftPosition);
+            telemetry.addLine("Claw position" + clawPosition);
+
+
+
 
 
             telemetry.update();
@@ -167,24 +187,24 @@ public class MecanumTeleOp extends LinearOpMode {
             case FtcGamePad.GAMEPAD_DPAD_LEFT:
                 if(pressed)
                     //opening the claw 12/29/22
-                    claw.setPosition(1);
+                    claw.setPosition();
                 break;
             case FtcGamePad.GAMEPAD_DPAD_RIGHT:
                 if(pressed)
                     //closing the claw 12/29/22
-                    claw.setPosition(.45);
+                    claw.setPosition();
                 break;
 
 
             case FtcGamePad.GAMEPAD_DPAD_UP:
-               if(pressed)
-                   motorLift.setPower(0.70);
+               if(pressed && motorLift.getCurrentPosition() < 818)
+                    motorLift.setPower(0.70);
                else
                    motorLift.setPower(0);
                break;
             case FtcGamePad.GAMEPAD_DPAD_DOWN:
-                if(pressed)
-                    motorLift.setPower(-.70);
+                if(pressed && motorLift.getCurrentPosition() > 0)
+                        motorLift.setPower(-.70);
                 else
                     motorLift.setPower(0);
                 break;
@@ -192,17 +212,6 @@ public class MecanumTeleOp extends LinearOpMode {
 
 
 
-//            case FtcGamePad.GAMEPAD_X:
-//                if(pressed)
-//                    claw.setPosition(claw.getPosition() + .10);
-//                break;
-
-
-
-//            case FtcGamePad.GAMEPAD_B:
-//                    if(pressed)
-//                        claw.setPosition(claw.getPosition() - .10);
-//                    break;
 
 
 
