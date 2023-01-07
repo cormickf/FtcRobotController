@@ -9,6 +9,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -29,7 +30,7 @@ public class MecanumTeleOp extends LinearOpMode {
     private double offsetHeading = 0;
 
 
-    private DcMotor motorLift;
+    private DcMotorEx motorLift;
     private Servo claw;
 
 
@@ -43,11 +44,15 @@ public class MecanumTeleOp extends LinearOpMode {
 
         // Declare our motors
         // Make sure your ID's match your configuration
+
+
         DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
         DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
         DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
-        motorLift = hardwareMap.dcMotor.get("motorLift");
+        motorLift = hardwareMap.get(DcMotorEx.class, "motorLift");
+
+        motorLift.setTargetPositionTolerance(20);
 
         motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -68,7 +73,7 @@ public class MecanumTeleOp extends LinearOpMode {
         // Reverse left motors if you are using NeveRests
         motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorLift.setDirection(DcMotorSimple.Direction.REVERSE);
+//        motorLift.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
 
@@ -153,18 +158,7 @@ public class MecanumTeleOp extends LinearOpMode {
 
                 break;
 
-            case FtcGamePad.GAMEPAD_DPAD_RIGHT:
-                if(pressed)
-                    //closes the claw 12/29/22
-                    claw.setPosition(1);
 
-
-                break;
-            case FtcGamePad.GAMEPAD_DPAD_LEFT:
-                if(pressed)
-                        //opens the claw 12/29/22
-                        claw.setPosition(.45);
-                        break;
 
 
             case FtcGamePad.GAMEPAD_BACK:
@@ -186,28 +180,50 @@ public class MecanumTeleOp extends LinearOpMode {
 
             case FtcGamePad.GAMEPAD_DPAD_LEFT:
                 if(pressed)
-                    //opening the claw 12/29/22
-                    claw.setPosition(.10);
+                    //opening the claw
+                    claw.setPosition(0);
                 break;
             case FtcGamePad.GAMEPAD_DPAD_RIGHT:
                 if(pressed)
-                    //closing the claw 12/29/22
-                    claw.setPosition(.80);
+                    //closing the claw
+                    claw.setPosition(1);
                 break;
 
 
             case FtcGamePad.GAMEPAD_DPAD_UP:
+                motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                if(pressed && motorLift.getCurrentPosition() < 818)
                     motorLift.setPower(0.85);
                else
                    motorLift.setPower(0);
                break;
             case FtcGamePad.GAMEPAD_DPAD_DOWN:
+                motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 if(pressed && motorLift.getCurrentPosition() > 0)
                         motorLift.setPower(-.80);
                 else
                     motorLift.setPower(0);
                 break;
+
+
+            case FtcGamePad.GAMEPAD_A:
+                if(pressed){
+                    motorLift.setTargetPosition(0);
+                    motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    motorLift.setPower(0.8);
+                    break;
+                }
+
+
+            case FtcGamePad.GAMEPAD_Y:
+                if(pressed){
+                    motorLift.setTargetPosition(800);
+                    motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    motorLift.setPower(.50);
+                }
+
+
+
 
 
 

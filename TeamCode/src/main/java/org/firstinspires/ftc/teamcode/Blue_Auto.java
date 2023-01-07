@@ -228,17 +228,8 @@ public class Blue_Auto extends LinearOpMode {
         }
 
         waitForStart();
-        StrafeInchesLeft(2,.5);
-        Waitmilli(1000);
-        claw.setPosition(1);
-        Waitmilli(1000);
-        DriveInches(-23,.50);
-        Waitmilli(1000);
-        claw.setPosition(.45);
-        Waitmilli(1000);
-        DriveInches(21.1, .50);
-        Waitmilli(1000);
 
+        claw.setPosition(.90);
         if (parkingPosition == VisionPathway.ParkingPosition.ONE) {
             DriveInches(2, .75);
             Waitmilli(1000);
