@@ -73,7 +73,7 @@ public class MecanumTeleOp extends LinearOpMode {
         // Reverse left motors if you are using NeveRests
         motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
-//        motorLift.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorLift.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
 
@@ -180,27 +180,28 @@ public class MecanumTeleOp extends LinearOpMode {
 
             case FtcGamePad.GAMEPAD_DPAD_LEFT:
                 if(pressed)
-                    //opening the claw
-                    claw.setPosition(0);
+                    //closing the claw
+                    claw.setPosition(.40);
                 break;
             case FtcGamePad.GAMEPAD_DPAD_RIGHT:
                 if(pressed)
-                    //closing the claw
-                    claw.setPosition(1);
+                    //opening the claw
+                    claw.setPosition(0);
+
                 break;
 
 
             case FtcGamePad.GAMEPAD_DPAD_UP:
                 motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-               if(pressed && motorLift.getCurrentPosition() < 818)
-                    motorLift.setPower(0.85);
+               if(pressed)
+                    motorLift.setPower(0.95);
                else
                    motorLift.setPower(0);
                break;
             case FtcGamePad.GAMEPAD_DPAD_DOWN:
                 motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 if(pressed && motorLift.getCurrentPosition() > 0)
-                        motorLift.setPower(-.80);
+                        motorLift.setPower(-.90);
                 else
                     motorLift.setPower(0);
                 break;
@@ -208,19 +209,30 @@ public class MecanumTeleOp extends LinearOpMode {
 
             case FtcGamePad.GAMEPAD_A:
                 if(pressed){
+                    // going to the ground
                     motorLift.setTargetPosition(0);
                     motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    motorLift.setPower(0.8);
+                    motorLift.setPower(0.9);
                     break;
                 }
 
 
             case FtcGamePad.GAMEPAD_Y:
-                if(pressed){
-                    motorLift.setTargetPosition(800);
+                if(pressed) {
+                    // goes to the medium
+                    motorLift.setTargetPosition(1415);
                     motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    motorLift.setPower(.50);
+                    motorLift.setPower(.90);
+                    break;
                 }
+
+           case FtcGamePad.GAMEPAD_B:
+               if(pressed){
+                   motorLift.setTargetPosition(859);
+                   motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                   motorLift.setPower(.90);
+                   break;
+               }
 
 
 
