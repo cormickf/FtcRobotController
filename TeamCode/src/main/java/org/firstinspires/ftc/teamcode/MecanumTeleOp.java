@@ -20,9 +20,11 @@ public class MecanumTeleOp extends LinearOpMode {
     private FtcGamePad driverGamePad;
     private FtcGamePad operatorGamePad;
     public BNO055IMU imu;
+
+
     public boolean fastMode;
     private boolean slowMode;
-
+    private boolean backButtonPressed;
 
 
 
@@ -32,6 +34,12 @@ public class MecanumTeleOp extends LinearOpMode {
 
     private DcMotorEx motorLift;
     private Servo claw;
+
+    private final int mediumPole = 1415;
+    private final int lowPole = 859;
+    private final int highPole = 0;
+
+    private double liftMotorSpeed = .50;
 
 
 
@@ -128,10 +136,11 @@ public class MecanumTeleOp extends LinearOpMode {
             int liftMotor = motorLift.getCurrentPosition();
             String liftPosition = Integer.toString(liftMotor);
             String clawPosition = Double.toString(claw.getPosition());
+            String motorSpeed = Double.toString(liftMotorSpeed);
 
             telemetry.addLine("Lift position:" + liftPosition);
-            telemetry.addLine("Claw position" + clawPosition);
-
+            telemetry.addLine("Claw position:" + clawPosition);
+            telemetry.addLine("Lift speed:" + motorSpeed);
 
 
 
@@ -194,16 +203,27 @@ public class MecanumTeleOp extends LinearOpMode {
             case FtcGamePad.GAMEPAD_DPAD_UP:
                 motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                if(pressed)
-                    motorLift.setPower(0.95);
+                    motorLift.setPower(liftMotorSpeed);
                else
                    motorLift.setPower(0);
+
+
+               if(pressed && backButtonPressed){
+                   liftMotorSpeed = liftMotorSpeed + .05;
+               }
                break;
+
             case FtcGamePad.GAMEPAD_DPAD_DOWN:
                 motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 if(pressed && motorLift.getCurrentPosition() > 0)
-                        motorLift.setPower(-.90);
+                        motorLift.setPower(-liftMotorSpeed);
                 else
                     motorLift.setPower(0);
+
+
+                if(pressed && backButtonPressed) {
+                    liftMotorSpeed = liftMotorSpeed - .05;
+                }
                 break;
 
 
@@ -212,7 +232,7 @@ public class MecanumTeleOp extends LinearOpMode {
                     // going to the ground
                     motorLift.setTargetPosition(0);
                     motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    motorLift.setPower(0.9);
+                    motorLift.setPower(liftMotorSpeed);
                     break;
                 }
 
@@ -220,19 +240,31 @@ public class MecanumTeleOp extends LinearOpMode {
             case FtcGamePad.GAMEPAD_Y:
                 if(pressed) {
                     // goes to the medium
-                    motorLift.setTargetPosition(1415);
+                    motorLift.setTargetPosition(mediumPole);
                     motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    motorLift.setPower(.90);
+                    motorLift.setPower(liftMotorSpeed);
                     break;
                 }
 
            case FtcGamePad.GAMEPAD_B:
                if(pressed){
-                   motorLift.setTargetPosition(859);
+                   motorLift.setTargetPosition(lowPole);
                    motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                   motorLift.setPower(.90);
+                   motorLift.setPower(liftMotorSpeed);
                    break;
                }
+           case FtcGamePad.GAMEPAD_X:
+               if(pressed){
+                   //change the high of the int highPole
+                   motorLift.setTargetPosition(highPole);
+                   motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                   motorLift.setPower(liftMotorSpeed);
+                   break;
+               }
+            case FtcGamePad.GAMEPAD_BACK:
+                backButtonPressed = pressed;
+
+                break;
 
 
 
