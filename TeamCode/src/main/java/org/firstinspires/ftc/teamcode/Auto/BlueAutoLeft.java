@@ -53,9 +53,9 @@ import org.firstinspires.ftc.teamcode.Background.VisionPathway;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Red Auto", group="Linear Opmode")
+@Autonomous(name=" Blue Auto Left", group="Linear Opmode")
 
-public class RedAuto extends LinearOpMode {
+public class BlueAutoLeft extends LinearOpMode {
 
 
     private static final double WHEEL_CIRCUMFERENCE = 3.5433 * Math.PI;
@@ -228,21 +228,31 @@ public class RedAuto extends LinearOpMode {
             telemetry.update();
         }
 
+        waitForStart();
 
+        //close cam
+        StrafeInchesLeft(28.5,.50);
+        Waitmilli(2000);
+        DriveInches(4,.50);
+        Waitmilli(2000);
+        StrafeInchesLeft(37,.50);
+        DriveInches(-5,50);
         if (parkingPosition == VisionPathway.ParkingPosition.ONE) {
-//            DriveInches(2, .75);
-            Waitmilli(1000);
-            StrafeInchesLeft(26.5, .75);
-            Waitmilli(1000);
-            DriveInches(-20, .75);
-            //done
+           // Get distance to get to position one
+            DriveInches(4,.50);
+            StrafeInchesRight(38,.50);
+            DriveInches(30,.50);
         } else if (parkingPosition == VisionPathway.ParkingPosition.THREE) {
-            StrafeInchesLeft(32, .75);
-            DriveInches(20, .75);
-            //done
-        } else
-            StrafeInchesLeft(25, .75);
-        // done
+            // get Distance to get to position three
+            DriveInches(4,.50);
+            StrafeInchesRight(34,.50);
+            DriveInches(-27,.50);
+
+        } else {
+            DriveInches(4, .50);
+            StrafeInchesRight(38, .50);
+        }
+
 
 
 

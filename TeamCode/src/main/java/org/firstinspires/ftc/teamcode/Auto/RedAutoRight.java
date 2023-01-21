@@ -36,6 +36,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Background.AprilTagVisionPathway;
+import org.firstinspires.ftc.teamcode.Background.VisionPathway;
+
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -50,9 +53,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name=" Blue Auto Two", group="Linear Opmode")
+@Autonomous(name="Red Auto Right", group="Linear Opmode")
 
-public class BleuAutoTwo extends LinearOpMode {
+public class RedAutoRight extends LinearOpMode {
 
 
     private static final double WHEEL_CIRCUMFERENCE = 3.5433 * Math.PI;
@@ -64,7 +67,12 @@ public class BleuAutoTwo extends LinearOpMode {
     private DcMotor motorBackRight = null;
     private DcMotor motorBackLeft = null;
 
+    private VisionPathway visionPathway;
+    private VisionPathway.ParkingPosition parkingPosition;
+
     private Servo claw;
+    private boolean runPark;
+
 
 
 
@@ -207,16 +215,49 @@ public class BleuAutoTwo extends LinearOpMode {
         motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        visionPathway = new AprilTagVisionPathway(this);
+
 
 
         claw = hardwareMap.servo.get("Claw");
 
+        while(!isStarted()) {
+            visionPathway.UpdateDetections();
+            parkingPosition = visionPathway.GetDetectedParkingPosition();
+            telemetry.addData("Parking Position", visionPathway.GetDetectedParkingPosition().name());
+            telemetry.update();
+        }
+
+
         waitForStart();
-        claw.setPosition(1);
-        DriveInches(-108,.7);
-        StrafeInchesLeft(30,.7);
-        DriveInches(5, .5);
-        claw.setPosition(.25);
+        StrafeInchesLeft(54,.50);
+        Waitmilli(500);
+        StrafeInchesRight(4,.50);
+        Waitmilli(500);
+        DriveInches(22,.50);
+        StrafeInchesLeft(17,.50);
+        Waitmilli(1000);
+        DriveInches(-5,.50);
+        Waitmilli(1000);
+
+        if (parkingPosition == VisionPathway.ParkingPosition.ONE) {
+            // Get distance to get to position one
+
+            DriveInches(5,.50);
+            StrafeInchesRight(35,.50);
+            DriveInches(-38,.50);
+
+        } else if (parkingPosition == VisionPathway.ParkingPosition.THREE) {
+            // get Distance to get to position three
+            DriveInches(5,.50);
+            StrafeInchesRight(35,.50);
+
+        } else {
+            DriveInches(5,.50);
+            StrafeInchesRight(35,.50);
+            DriveInches(-23,.50);
+        }
+
 
 
 
