@@ -80,7 +80,7 @@ public class SelfBalanceV2 extends LinearOpMode {
 
         imu = hardwareMap.get(IMU.class, "imu");
 
-
+        // Setting the IMU positions on the bot
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.FORWARD;
         RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
 
@@ -103,22 +103,19 @@ public class SelfBalanceV2 extends LinearOpMode {
 
         waitForStart();
 
-        // Loop and update the dashboard
+
         while (!isStopRequested()) {
 
 
             YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
 
 
-            double leftMotorLocation = motorLeft.getCurrentPosition();
-            double rightMotorLocation = motorRight.getCurrentPosition();
-
 
             // Read inverse IMU heading, as the UMG heading is CW positive
             double botHeading = orientation.getPitch(AngleUnit.DEGREES);
 
             double error = (perfectHeading - botHeading);
-//
+
             double derivative = (error - lastError) / timer.seconds();
             integralSum = integralSum + (error * timer.seconds());
             double out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
